@@ -1,0 +1,12 @@
+{
+  "cred":[
+    {
+      "username": "efa69e26-50bf-4031-9047-335b836c1494-bluemix",
+      "password": "2f4cfbbeb079e2323be4fdd1508c91f788c3d7d949d8b0e060d25c4637f7d1ff",
+      "host": "efa69e26-50bf-4031-9047-335b836c1494-bluemix.cloudant.com",
+      "port": 443,
+      "url": "https://efa69e26-50bf-4031-9047-335b836c1494-bluemix:2f4cfbbeb079e2323be4fdd1508c91f788c3d7d949d8b0e060d25c4637f7d1ff@efa69e26-50bf-4031-9047-335b836c1494-bluemix.cloudant.com",
+      "database":"handson"
+    }
+  ]
+}

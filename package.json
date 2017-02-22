@@ -1,16 +1,24 @@
 {
-	"name": "NodejsStarterApp",
-	"version": "0.0.1",
-	"private": true,
-	"scripts": {
-		"start": "node app.js"
-	},
-	"dependencies": {
-		"express": "4.13.x",
-		"cfenv": "1.0.x"
-	},
-	"repository": {},
-	"engines": {
-		"node": "4.x"
-	} 
+  "name": "nodejsstartapp",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.16.1",
+    "cfenv": "1.0.x",
+    "cors": "^2.8.1",
+    "express": "4.13.x",
+    "q": "^1.4.1",
+    "request": "^2.79.0"
+  },
+  "repository": {},
+  "engines": {
+    "node": "4.x"
+  },
+  "description": "This application demonstrates a simple, reusable Node.js web application based on the Express framework.",
+  "main": "app.js",
+  "author": "Fernando Cardoso Durier da Silva",
+  "license": "ISC"
 }

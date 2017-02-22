@@ -7,7 +7,9 @@
 // This application uses express as its web server
 // for more info, see: http://expressjs.com
 var express = require('express');
-
+var conductor = require('./src/main.js');
+var bodyParser = require('body-parser');
+var cors = require('cors')
 // cfenv provides access to your Cloud Foundry environment
 // for more info, see: https://www.npmjs.com/package/cfenv
 var cfenv = require('cfenv');
@@ -17,7 +19,12 @@ var app = express();
 
 // serve the files out of ./public as our main files
 app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.json());       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+}));
 
+app.get('/database/flood',conductor.massin);
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
 

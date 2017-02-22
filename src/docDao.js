@@ -1,0 +1,152 @@
+var Q = require('q');
+var request = require('request');
+var cloudant = require('../config/cloudant.json');
+var cred = cloudant.cred;
+
+var docTemplate =
+{
+  "NAME":null,
+  "CITY":null,
+  "COUNTRY":null,
+  "TELEPHONE":null,
+  "EMAIL":null
+};
+
+exports.massInsert = function(){
+  var massDefer = Q.defer();
+
+  for(var i=0;i<10;i++){
+    var interJson = docTemplate;
+    interJson.NAME = "Teste "+i;
+    interJson.EMAIL = "Teste"+i+"@br.ibm.com";
+    interJson.TELEPHONE =
+    "(" + Math.ceil(Math.random()*10) + Math.ceil(Math.random()*10) + ") 9 "+
+    Math.ceil(Math.random()*10) + Math.ceil(Math.random()*10) + Math.ceil(Math.random()*10) +
+    Math.ceil(Math.random()*10) + " - " + Math.ceil(Math.random()*10) + Math.ceil(Math.random()*10) +
+    Math.ceil(Math.random()*10) + Math.ceil(Math.random()*10);
+
+    if(i%2 == 0){
+      interJson.CITY = "RIO DE JANEIRO";
+      interJson.COUNTRY = "BRAZIL";
+    }
+    else{
+      interJson.CITY = "HORTOLANDIA";
+      interJson.COUNTRY = "BRAZIL";
+    }
+
+    request({
+        url:  cred[0].url + "/" + cred[0].database,
+        method: 'POST',
+				json: interJson
+    }, function(error, response, body){
+        if(error) {
+
+        	console.log("erro de get");
+            console.log(error);
+        }
+        else {
+        	  console.log("resultado do post");
+            console.log(response.statusCode, body);
+        }
+    });
+  }
+
+  setTimeout(
+    function(){
+      massDefer.resolve({"status":"done"});
+    },2000
+  );
+
+  return massDefer.promise;
+}
+
+
+var massDelete = function(url,database){
+  var massDefer = Q.defer();
+  var getAllDocs = url+"/"+database+"/_find";
+  var getQuery = {
+                  "selector": {
+                    "_id": {
+                      "$gt": 0
+                    }
+                  },
+                  "fields": [
+                    "_id",
+                    "_rev"
+                  ],
+                  "sort": [
+                    {
+                      "_id": "asc"
+                    }
+                  ]
+                };
+      var selectAll = function(){
+          var seleDefer = Q.defer();
+          request({
+                url: getAllDocs,//URL to hit
+                method: 'POST',
+                json:getQuery
+            }, function(error, response, body){
+                if(error) {
+                    console.log(error);
+                    seleDefer.reject(error);
+                }
+                else {
+                    //console.log(response.statusCode, JSON.parse(body).rows );
+                    //console.log(body.docs);
+                    var alter = function(){
+                      var alterDefer = Q.defer();
+                      //console.log('---alter----');
+                      //console.log(body.docs);
+                      for(var i=0;i<body.docs.length;i++){
+                        body.docs[i]._deleted = true;
+                      //  console.log(body.docs);
+                        if(i+1>=body.docs.length){
+                          alterDefer.resolve({"status":true});
+                        }
+                      }
+                      return alterDefer.promise;
+                    }
+                    alter().then(function(data){if(data.status){
+                      //console.log(data);
+                      massDefer.resolve({"docs":body.docs});
+                      seleDefer.resolve({"docs":body.docs});
+                    }});
+
+                }
+            });
+            return seleDefer.promise;
+      }
+      selectAll();
+      return massDefer.promise;
+};
+
+exports.massDel = function(url,database){
+  var mdDefer = Q.defer();
+massDelete(url,database)
+.then(
+  function(data){
+    var bulkPreparing = Q.defer();
+    console.log(data);
+    bulkPreparing.resolve(data);
+    return bulkPreparing.promise;
+  }).then(function(data){
+    var massDeleteFinalDefer = Q.defer();
+      request({
+            url: url+"/"+database+"/_bulk_docs",//URL to hit
+            qs: {from: 'tp fernando', time: new Date()}, //Query string data
+            method: 'POST',
+            json:data
+        }, function(error, response, body){
+            if(error) {
+                console.log(error);
+                massDeleteFinalDefer.reject({"status":false});
+            }
+            else {
+               massDeleteFinalDefer.resolve({"status":true});
+            }
+        });
+        return massDeleteFinalDefer.promise;
+  }).then(function(data){mdDefer.resolve({"status":data.status});});
+  return mdDefer.promise;
+}
