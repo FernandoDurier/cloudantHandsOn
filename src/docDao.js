@@ -41,7 +41,7 @@ exports.massInsert = function(){
     }, function(error, response, body){
         if(error) {
 
-        	console.log("erro de get");
+        	console.log("erro de post");
             console.log(error);
         }
         else {
@@ -331,4 +331,30 @@ exports.insertDoc = function(name,city,country,telephone,email){
            }
        });
       return insertDefer.promise;
+    }
+
+    exports.bulkInsert = function(array){
+      var bulkInsertDefer = Q.defer();
+      //console.log(JSON.strigify(array));
+      var insertJSON = {"docs":null};
+      insertJSON.docs = array;
+      console.log("array:",insertJSON);
+      request({
+           url: cred[0].url+"/"+cred[0].database+"/_bulk_docs",//URL to hit
+           qs: {from: 'tp fernando', time: +new Date()}, //Query string data
+           method: 'POST',
+           json:insertJSON
+           //Lets post the following key/values as form
+       }, function(error, response, body){
+           if(error) {
+               //console.log(error);
+               bulkInsertDefer.reject({"status":500,"body":error});
+           }
+           else {
+               //console.log(response.statusCode, body);
+               bulkInsertDefer.resolve({"status":response.statusCode,"body":body});
+           }
+       });
+
+      return bulkInsertDefer.promise;
     }

@@ -69,3 +69,11 @@ exports.postAny = function(req,res){
     res.end(JSON.stringify(data.body));
   });
 }
+
+exports.postBulky = function(req,res){
+  //console.log( JSON.stringify(req.body.array) );
+  doc.bulkInsert(req.body.array).then(function(data){
+    res.status(data.status);
+    res.end(JSON.stringify(data.body));
+  });
+}
