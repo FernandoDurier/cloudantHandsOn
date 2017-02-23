@@ -25,6 +25,10 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 }));
 
 app.get('/database/flood',conductor.massin);
+app.post('/select',conductor.select);
+app.get('/select/:filter/:value',conductor.selectget);
+app.post('/update',conductor.put);
+
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
 

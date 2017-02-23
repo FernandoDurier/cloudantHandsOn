@@ -150,3 +150,78 @@ massDelete(url,database)
   }).then(function(data){mdDefer.resolve({"status":data.status});});
   return mdDefer.promise;
 }
+
+
+exports.select = function(filter){
+  var selectDefer = Q.defer();
+  //console.log(filter);
+  var qjson = {
+    "selector":JSON.parse(filter),
+    "fields":[],
+    "sort":[{"_id":"asc"}]
+  };
+  console.log(qjson);
+    request({
+          url: cred[0].url+"/"+cred[0].database+"/_find",//URL to hit
+          qs: {from: 'tp fernando', time: new Date()}, //Query string data
+          method: 'POST',
+          json:qjson
+      }, function(error, response, body){
+          if(error) {
+              console.log(error);
+            selectDefer.reject({"status":500,"body":error});
+          }
+          else {
+            selectDefer.resolve({"status":200,"body":body.docs});
+          }
+      });
+      return selectDefer.promise;
+}
+
+exports.selectget = function(filter,value){
+  var selectDefer = Q.defer();
+  //console.log(filter);
+  var interJSON = "{\""+filter+"\":\""+value+"\"}"
+  var qjson = {
+    "selector":JSON.parse(interJSON),
+    "fields":[],
+    "sort":[{"_id":"asc"}]
+  };
+  console.log(qjson);
+    request({
+          url: cred[0].url+"/"+cred[0].database+"/_find",//URL to hit
+          qs: {from: 'tp fernando', time: new Date()}, //Query string data
+          method: 'POST',
+          json:qjson
+      }, function(error, response, body){
+          if(error) {
+              console.log(error);
+            selectDefer.reject({"status":500,"body":error});
+          }
+          else {
+            selectDefer.resolve({"status":200,"body":body.docs});
+          }
+      });
+      return selectDefer.promise;
+}
+
+
+exports.updateDoc = function(id,rev,name,city,country,telephone,email){
+  var updateDefer = Q.defer();
+  var qjson = {"_id":id,"_rev":rev,"NAME":name,"CITY":city,"COUNTRY":country,"TELEPHONE":telephone,"EMAIL":email};
+  request({
+        url: cred[0].url+"/"+cred[0].database+"/"+id,//URL to hit
+        qs: {from: 'tp fernando', time: new Date()}, //Query string data
+        method: 'PUT',
+        json:qjson
+    }, function(error, response, body){
+        if(error) {
+            console.log(error);
+          updateDefer.reject({"status":500,"body":error});
+        }
+        else {
+          updateDefer.resolve({"status":200,"body":body});
+        }
+    });
+    return updateDefer.promise;
+}
