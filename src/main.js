@@ -30,3 +30,19 @@ exports.put = function(req,res){
     res.end(JSON.stringify(data.body));
   });
 }
+
+exports.delete = function(req,res){
+  doc.deleteDoc(req.body._id,req.body._rev)
+  .then(function(data){
+    res.status(data.status);
+    res.end(JSON.stringify(data.body));
+  });
+}
+
+exports.post = function(req,res){
+  doc.insertDoc(req.body.NAME,req.body.CITY,req.body.COUNTRY,req.body.TELEPHONE,req.body.EMAIL)
+  .then(function(data){
+    res.status(data.status);
+    res.end(JSON.stringify(data.body));
+  });
+}

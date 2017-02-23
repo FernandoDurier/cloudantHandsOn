@@ -225,3 +225,53 @@ exports.updateDoc = function(id,rev,name,city,country,telephone,email){
     });
     return updateDefer.promise;
 }
+
+exports.deleteDoc = function(id,rev){
+  var deleteDefer = Q.defer();
+
+  request({
+       url: cred[0].url+"/"+cred[0].database+"/"+id+"?rev="+rev,//URL to hit
+       qs: {from: 'tp fernando', time: +new Date()}, //Query string data
+       method: 'DELETE',
+       //Lets post the following key/values as form
+   }, function(error, response, body){
+       if(error) {
+           //console.log(error);
+           deleteDefer.reject({"status":500,"body":error});
+       }
+       else {
+           //console.log(response.statusCode, body);
+           deleteDefer.resolve({"status":response.statusCodes,"body":body});
+       }
+   });
+
+  return deleteDefer.promise;
+}
+
+exports.insertDoc = function(name,city,country,telephone,email){
+  var insertDefer = Q.defer();
+  var insertJSON = {
+    "NAME":name,
+    "CITY":city,
+    "COUNTRY":country,
+    "TELEPHONE":telephone,
+    "EMAIL":email
+  };
+  request({
+       url: cred[0].url+"/"+cred[0].database,//URL to hit
+       qs: {from: 'tp fernando', time: +new Date()}, //Query string data
+       method: 'POST',
+       json:insertJSON
+       //Lets post the following key/values as form
+   }, function(error, response, body){
+       if(error) {
+           //console.log(error);
+           insertDefer.reject({"status":500,"body":error});
+       }
+       else {
+           //console.log(response.statusCode, body);
+           insertDefer.resolve({"status":response.statusCodes,"body":body});
+       }
+   });
+  return insertDefer.promise;
+}
