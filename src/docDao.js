@@ -310,3 +310,25 @@ exports.insertDoc = function(name,city,country,telephone,email){
           });
           return seleDefer.promise;
     }
+
+    exports.insertAny = function(ajson){
+      var insertDefer = Q.defer();
+      var insertJSON = ajson;
+      request({
+           url: cred[0].url+"/"+cred[0].database,//URL to hit
+           qs: {from: 'tp fernando', time: +new Date()}, //Query string data
+           method: 'POST',
+           json:insertJSON
+           //Lets post the following key/values as form
+       }, function(error, response, body){
+           if(error) {
+               //console.log(error);
+               insertDefer.reject({"status":500,"body":error});
+           }
+           else {
+               //console.log(response.statusCode, body);
+               insertDefer.resolve({"status":response.statusCode,"body":body});
+           }
+       });
+      return insertDefer.promise;
+    }

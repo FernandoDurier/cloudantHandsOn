@@ -62,3 +62,10 @@ exports.getAll = function(req,res){
     res.end(JSON.stringify(data.body));
   });
 }
+
+exports.postAny = function(req,res){
+  doc.insertAny(req.body.ajson).then(function(data){
+    res.status(data.status);
+    res.end(JSON.stringify(data.body));
+  });
+}

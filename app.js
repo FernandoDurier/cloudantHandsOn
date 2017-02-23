@@ -32,6 +32,7 @@ app.post('/insert',conductor.post);
 app.post('/update',conductor.put);
 app.post('/delete',conductor.delete);
 app.get('/everydoc',conductor.getAll);
+app.post('/insert/any',conductor.postAny);
 
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
