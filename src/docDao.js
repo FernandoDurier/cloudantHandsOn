@@ -241,7 +241,7 @@ exports.deleteDoc = function(id,rev){
        }
        else {
            //console.log(response.statusCode, body);
-           deleteDefer.resolve({"status":response.statusCodes,"body":body});
+           deleteDefer.resolve({"status":response.statusCode,"body":body});
        }
    });
 
@@ -270,7 +270,7 @@ exports.insertDoc = function(name,city,country,telephone,email){
        }
        else {
            //console.log(response.statusCode, body);
-           insertDefer.resolve({"status":response.statusCodes,"body":body});
+           insertDefer.resolve({"status":response.statusCode,"body":body});
        }
    });
   return insertDefer.promise;
