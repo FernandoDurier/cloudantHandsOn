@@ -9,6 +9,15 @@ exports.massin = function(req,res){
   });
 }
 
+exports.massdel = function(req,res){
+  doc.massDel(req.body.url,req.body.database).then(function(data){
+    if(data.status === "done"){
+      res.status(200);
+      res.end("{\"status\":\"done\"}");
+    }
+  });
+}
+
 exports.select = function(req,res){
   doc.select(req.body.FILTER).then(function(data){
     res.status(data.status);

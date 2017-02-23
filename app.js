@@ -25,6 +25,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 }));
 
 app.get('/database/flood',conductor.massin);
+app.post('/mass/delete',conductor.massdel);
 app.post('/select',conductor.select);
 app.get('/select/:filter/:value',conductor.selectget);
 app.post('/insert',conductor.post);
