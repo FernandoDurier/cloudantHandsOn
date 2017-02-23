@@ -294,7 +294,7 @@ exports.insertDoc = function(name,city,country,telephone,email){
                         ]
                       };
         request({
-              url: cred[0].url+"/"+cred[0].database,//URL to hit
+              url: cred[0].url+"/"+cred[0].database+"/_find",//URL to hit
               method: 'POST',
               json:getQuery
           }, function(error, response, body){

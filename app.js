@@ -31,6 +31,7 @@ app.get('/select/:filter/:value',conductor.selectget);
 app.post('/insert',conductor.post);
 app.post('/update',conductor.put);
 app.post('/delete',conductor.delete);
+app.get('/everydoc',conductor.getAll);
 
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
