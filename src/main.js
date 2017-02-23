@@ -55,3 +55,10 @@ exports.post = function(req,res){
     res.end(JSON.stringify(data.body));
   });
 }
+
+exports.getAll = function(req,res){
+  doc.selectEveryDoc().then(function(data){
+    res.status(data.status);
+    res.end(JSON.stringify(data.body));
+  });
+}

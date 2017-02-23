@@ -275,3 +275,38 @@ exports.insertDoc = function(name,city,country,telephone,email){
    });
   return insertDefer.promise;
 }
+
+
+  exports.selectEveryDoc = function(){
+        var seleDefer = Q.defer();
+        var getQuery = {
+                        "selector": {
+                          "_id": {
+                            "$gt": 0
+                          }
+                        },
+                        "fields": [
+                        ],
+                        "sort": [
+                          {
+                            "_id": "asc"
+                          }
+                        ]
+                      };
+        request({
+              url: cred[0].url+"/"+cred[0].database,//URL to hit
+              method: 'POST',
+              json:getQuery
+          }, function(error, response, body){
+              if(error) {
+                  console.log(error);
+                  seleDefer.reject({"status":500,"body":error});
+              }
+              else {
+                  //console.log(response.statusCode, JSON.parse(body).rows );
+                  //console.log(body.docs);
+                    seleDefer.resolve({"status":response.statusCode,"body":body.docs});
+              }
+          });
+          return seleDefer.promise;
+    }
