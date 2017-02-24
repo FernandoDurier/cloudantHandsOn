@@ -358,3 +358,80 @@ exports.insertDoc = function(name,city,country,telephone,email){
 
       return bulkInsertDefer.promise;
     }
+
+    exports.bulkUpdate = function(array,upfield,neoValue){
+      var bulkUpdateDefer = Q.defer();
+      //console.log(JSON.strigify(array));
+      var select = function(filter){
+        var selectDefer = Q.defer();
+        //console.log(filter);
+        var qjson = {
+          "selector":JSON.parse(filter),
+          "fields":[],
+          "sort":[{"_id":"asc"}]
+        };
+        console.log(qjson);
+          request({
+                url: cred[0].url+"/"+cred[0].database+"/_find",//URL to hit
+                qs: {from: 'tp fernando', time: new Date()}, //Query string data
+                method: 'POST',
+                json:qjson
+            }, function(error, response, body){
+                if(error) {
+                    console.log(error);
+                  selectDefer.reject({"status":500,"body":error});
+                }
+                else {
+                  selectDefer.resolve({"status":200,"body":body.docs});
+                }
+            });
+            return selectDefer.promise;
+      }
+
+
+      var massUp = function(uparray){
+      var insertJSON = {"docs":null};
+      insertJSON.docs = uparray;
+      console.log("array:",insertJSON.length);
+      request({
+           url: cred[0].url+"/"+cred[0].database+"/_bulk_docs",//URL to hit
+           qs: {from: 'tp fernando', time: +new Date()}, //Query string data
+           method: 'POST',
+           json:insertJSON
+           //Lets post the following key/values as form
+       }, function(error, response, body){
+           if(error) {
+               //console.log(error);
+               bulkUpdateDefer.reject({"status":500,"body":error});
+           }
+           else {
+               //console.log(response.statusCode, body);
+               bulkUpdateDefer.resolve({"status":response.statusCode,"body":body});
+           }
+       });
+     }
+
+     select(array)
+     .then(function(data){
+       console.log("Size of UPDATE:",data.body.length);
+       var interPromise = Q.defer();
+       var neededInfo = data.body;
+       var finalArray = neededInfo;
+       for(var i=0;i<neededInfo.length;i++){
+         console.log("Updating "+ upfield+ ":" + finalArray[i][upfield] + " to " + neoValue);
+         finalArray[i][upfield] = neoValue;
+
+         if((i+1)==(neededInfo.length)){
+           interPromise.resolve({"status":true,"body":finalArray});
+         }
+       }
+       return interPromise.promise;
+     })
+     .then(function(data){
+       console.log(data.body);
+       massUp(data.body);
+     });
+
+
+      return bulkUpdateDefer.promise;
+    }

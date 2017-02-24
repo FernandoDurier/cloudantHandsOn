@@ -77,3 +77,11 @@ exports.postBulky = function(req,res){
     res.end(JSON.stringify(data.body));
   });
 }
+
+exports.putBulky = function(req,res){
+  //console.log( JSON.stringify(req.body.array) );
+  doc.bulkUpdate(req.body.array,req.body.upfield,req.body.neoValue).then(function(data){
+    res.status(data.status);
+    res.end(JSON.stringify(data.body));
+  });
+}
