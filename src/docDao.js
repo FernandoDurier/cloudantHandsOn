@@ -259,7 +259,7 @@ exports.insertDoc = function(name,city,country,telephone,email){
   };
   request({
        url: cred[0].url+"/"+cred[0].database,//URL to hit
-       qs: {from: 'tp fernando', time: +new Date()}, //Query string data
+       //qs: {from: 'tp fernando', time: +new Date()}, //Query string data
        method: 'POST',
        json:insertJSON
        //Lets post the following key/values as form
